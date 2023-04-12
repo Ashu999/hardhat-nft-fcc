@@ -1,15 +1,15 @@
 export interface networkConfigItem {
     name?: string
-    subscriptionId?: string 
-    keepersUpdateInterval?: string 
-    raffleEntranceFee?: string 
-    callbackGasLimit?: string 
+    subscriptionId?: string
+    keepersUpdateInterval?: string
+    raffleEntranceFee?: string
+    callbackGasLimit?: string
     vrfCoordinatorV2?: string
-    gasLane?: string 
+    gasLane?: string
     ethUsdPriceFeed?: string
     mintFee?: string
-  }
-  
+}
+
 export interface networkConfigInfo {
     [key: number]: networkConfigItem
 }
