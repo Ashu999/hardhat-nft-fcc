@@ -1,4 +1,8 @@
-import { developmentChains, VERIFICATION_BLOCK_CONFIRMATIONS, networkConfig } from "../helper-hardhat-config"
+import {
+    developmentChains,
+    VERIFICATION_BLOCK_CONFIRMATIONS,
+    networkConfig,
+} from "../helper-hardhat-config"
 import verify from "../utils/verify"
 import { DeployFunction } from "hardhat-deploy/types"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
@@ -34,10 +38,10 @@ const deployRandomIpfsNft: DeployFunction = async function (hre: HardhatRuntimeE
     if (process.env.UPLOAD_TO_PINATA == "true") {
         tokenUris = await handleTokenUris()
     }
-
+    let vrfCoordinatorV2Mock
     if (chainId == 31337) {
         // create VRFV2 Subscription
-        const vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
+        vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
         vrfCoordinatorV2Address = vrfCoordinatorV2Mock.address
         const transactionResponse = await vrfCoordinatorV2Mock.createSubscription()
         const transactionReceipt = await transactionResponse.wait()
@@ -51,8 +55,8 @@ const deployRandomIpfsNft: DeployFunction = async function (hre: HardhatRuntimeE
     }
 
     const waitBlockConfirmations = developmentChains.includes(network.name)
-    ? 1
-    : VERIFICATION_BLOCK_CONFIRMATIONS
+        ? 1
+        : VERIFICATION_BLOCK_CONFIRMATIONS
 
     log("----------------------------------------------------")
     const args = [
@@ -69,6 +73,8 @@ const deployRandomIpfsNft: DeployFunction = async function (hre: HardhatRuntimeE
         log: true,
         waitConfirmations: waitBlockConfirmations || 1,
     })
+    if (vrfCoordinatorV2Mock)
+        await vrfCoordinatorV2Mock.addConsumer(subscriptionId, randomIpfsNft.address)
 
     // Verify the deployment
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
