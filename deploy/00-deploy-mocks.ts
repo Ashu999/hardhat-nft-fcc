@@ -34,4 +34,4 @@ const deployMocks: DeployFunction = async function (hre: HardhatRuntimeEnvironme
     }
 }
 export default deployMocks
-deployMocks.tags = ["all", "mocks", "main", "randomipfs"]
+deployMocks.tags = ["all", "mocks", "main", "randomipfs", "dynamicsvg"]
